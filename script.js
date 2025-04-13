@@ -3,12 +3,19 @@ let items = [];
 
 // Load items from Replit Object Storage
 fetch('/api/items')
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) throw new Error('Failed to fetch items');
+    return response.json();
+  })
   .then(data => {
-    items = data;
+    items = Array.isArray(data) ? data : [];
     displayItems();
   })
-  .catch(error => console.error('Error loading items:', error));
+  .catch(error => {
+    console.error('Error loading items:', error);
+    items = [];
+    displayItems();
+  });
 
 function addItem() {
   const telegram = window.Telegram.WebApp;
