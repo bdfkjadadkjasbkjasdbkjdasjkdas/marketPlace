@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Market Place</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Market Place</h1>
+    <div id="adminPanel" class="admin-panel">
+      <h2>Добавить новый предмет (Только для @evgen87654321)</h2>
+      <input type="text" id="itemName" placeholder="Название предмета">
+      <input type="number" id="itemPrice" placeholder="Цена в рублях" min="0">
+      <input type="file" id="itemImage" accept="image/*">
+      <button onclick="addItem()">Добавить предмет</button>
+    </div>
+    <div id="itemsContainer" class="items-container"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
