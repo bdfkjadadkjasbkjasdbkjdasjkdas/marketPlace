@@ -40,6 +40,10 @@ app.post('/api/items', async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+app.listen(3000, '0.0.0.0', () => {
   console.log('Server running on port 3000');
 });
