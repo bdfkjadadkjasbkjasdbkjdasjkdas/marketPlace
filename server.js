@@ -11,25 +11,29 @@ app.use(express.static('./'));
 
 app.get('/api/items', async (req, res) => {
   try {
-    const data = await storage.get(ITEMS_KEY);
+    let data = await storage.get(ITEMS_KEY);
     if (!data) {
-      await storage.set(ITEMS_KEY, '[]');
-      return res.json([]);
+      data = '[]';
+      await storage.set(ITEMS_KEY, data);
     }
+    console.log('Retrieved items:', data);
     res.json(JSON.parse(data));
   } catch (error) {
     console.error('Get items error:', error);
-    res.status(500).json({ error: 'Failed to get items' });
+    res.json([]);
   }
 });
 
 app.post('/api/items', async (req, res) => {
-  if (!req.body) return res.status(400).json({ error: 'No data provided' });
+  if (!req.body || !Array.isArray(req.body)) {
+    return res.status(400).json({ error: 'Invalid data provided' });
+  }
   
   try {
-    await storage.set(ITEMS_KEY, JSON.stringify(req.body));
-    const savedData = await storage.get(ITEMS_KEY);
-    res.json(JSON.parse(savedData));
+    const itemsString = JSON.stringify(req.body);
+    console.log('Saving items:', itemsString);
+    await storage.set(ITEMS_KEY, itemsString);
+    res.json(req.body);
   } catch (error) {
     console.error('Save items error:', error);
     res.status(500).json({ error: 'Failed to save items' });
