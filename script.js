@@ -1,15 +1,14 @@
 const TELEGRAM_USERNAME = 'evgen87654321';
 let items = [];
 
-// Load initial items from cloud storage
-window.Telegram.WebApp.CloudStorage.getItem('marketItems', (error, value) => {
-  if (error) {
-    console.error('Error loading items:', error);
-    return;
-  }
-  items = JSON.parse(value || '[]');
-  displayItems();
-});
+// Load items from Replit Object Storage
+fetch('/api/items')
+  .then(response => response.json())
+  .then(data => {
+    items = data;
+    displayItems();
+  })
+  .catch(error => console.error('Error loading items:', error));
 
 function addItem() {
   const telegram = window.Telegram.WebApp;
@@ -43,14 +42,18 @@ function addItem() {
       image: e.target.result 
     };
     items.push(newItem);
-    window.Telegram.WebApp.CloudStorage.setItem('marketItems', JSON.stringify(items), (error) => {
-      if (error) {
-        console.error('Error saving items:', error);
-        return;
-      }
+    fetch('/api/items', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(items)
+    })
+    .then(() => {
       displayItems();
       clearInputs();
-    });
+    })
+    .catch(error => console.error('Error saving items:', error));
   };
   reader.readAsDataURL(imageFile);
 }
@@ -72,13 +75,17 @@ function deleteItem(index) {
   }
 
   items.splice(index, 1);
-  window.Telegram.WebApp.CloudStorage.setItem('marketItems', JSON.stringify(items), (error) => {
-    if (error) {
-      console.error('Error saving items:', error);
-      return;
-    }
+  fetch('/api/items', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(items)
+  })
+  .then(() => {
     displayItems();
-  });
+  })
+  .catch(error => console.error('Error saving items:', error));
 }
 
 function displayItems() {
