@@ -2,22 +2,26 @@ const TELEGRAM_USERNAME = 'evgen87654321';
 let items = [];
 
 // Load items from Replit Object Storage
-async function loadItems() {
-  try {
-    const response = await fetch('/api/items');
-    const data = await response.json();
-    items = Array.isArray(data) ? data : [];
-    console.log('Loaded items:', items);
-    displayItems();
-  } catch (error) {
-    console.error('Error loading items:', error);
-    items = [];
-    displayItems();
-  }
+function loadItems() {
+  fetch('/api/items')
+    .then(response => response.json())
+    .then(data => {
+      if (Array.isArray(data)) {
+        items = data;
+        console.log('Items loaded successfully:', items);
+        displayItems();
+      }
+    })
+    .catch(error => {
+      console.error('Error loading items:', error);
+    });
 }
 
+// Initial load
 loadItems();
-setInterval(loadItems, 5000); // Refresh items every 5 seconds
+
+// Refresh items every 3 seconds
+setInterval(loadItems, 3000);
 
 function addItem() {
   const telegram = window.Telegram.WebApp;
