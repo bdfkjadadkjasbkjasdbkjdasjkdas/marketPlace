@@ -1,83 +1,32 @@
 const TELEGRAM_USERNAME = 'evgen87654321';
-let items = [];
-
-// Load items from Replit Object Storage
-function loadItems() {
-  fetch('/api/items')
-    .then(response => response.json())
-    .then(data => {
-      if (Array.isArray(data)) {
-        items = data;
-        console.log('Items loaded successfully:', items);
-        displayItems();
-      }
-    })
-    .catch(error => {
-      console.error('Error loading items:', error);
-    });
-}
-
-// Initial load
-loadItems();
-
-// Refresh items every 3 seconds
-setInterval(loadItems, 3000);
-
-function addItem() {
-  const telegram = window.Telegram.WebApp;
-  const user = telegram.initDataUnsafe?.user;
-  const username = user?.username?.toLowerCase();
-
-  if (username !== TELEGRAM_USERNAME.toLowerCase()) {
-    alert('Только для @evgen87654321');
-    return;
+let items = [
+  {
+    name: 'Steam пополнение',
+    price: '1р = 1.2₽',
+    image: 'https://cdn-icons-png.flaticon.com/512/3670/3670382.png',
+    message: 'Здравствуйте, хочу купить Steam пополнение в размере'
+  },
+  {
+    name: 'V-Bucks Fortnite 1000',
+    price: '700₽',
+    image: 'i.png',
+    message: 'Здравствуйте, хочу купить V-Bucks Fortnite в размере 1000'
+  },
+  {
+    name: 'V-Bucks Fortnite 2800',
+    price: '1900₽',
+    image: 'i.png',
+    message: 'Здравствуйте, хочу купить V-Bucks Fortnite в размере 2800'
+  },
+  {
+    name: 'TG Stars 50',
+    price: '80₽',
+    image: 'https://cdn-icons-png.flaticon.com/512/1828/1828970.png',
+    message: 'Здравствуйте, хочу купить TG Stars в размере 50'
   }
+];
 
-  const name = document.getElementById('itemName').value;
-  const price = document.getElementById('itemPrice').value;
-  const imageFile = document.getElementById('itemImage').files[0];
-
-  if (!name || !price || !imageFile) {
-    alert('Please fill all fields');
-    return;
-  }
-
-  if (price < 0) {
-    alert('Price cannot be negative');
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const newItem = { 
-      name, 
-      price, 
-      image: e.target.result 
-    };
-    items.push(newItem);
-    fetch('/api/items', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(items)
-    })
-    .then(() => {
-      displayItems();
-      clearInputs();
-    })
-    .catch(error => console.error('Error saving items:', error));
-  };
-  reader.readAsDataURL(imageFile);
-}
-
-function clearInputs() {
-  document.getElementById('itemName').value = '';
-  document.getElementById('itemPrice').value = '';
-  document.getElementById('itemImage').value = '';
-}
-
-function deleteItem(index) {
+function displayItems() {
   const telegram = window.Telegram.WebApp;
   const user = telegram.initDataUnsafe?.user;
   const username = user?.username?.toLowerCase();
@@ -103,11 +52,6 @@ function deleteItem(index) {
 
 function displayItems() {
   const container = document.getElementById('itemsContainer');
-  const telegram = window.Telegram.WebApp;
-  const user = telegram.initDataUnsafe?.user;
-  const username = user?.username?.toLowerCase();
-  const isAdmin = username === TELEGRAM_USERNAME.toLowerCase();
-
   container.innerHTML = '';
 
   items.forEach((item, index) => {
@@ -116,11 +60,11 @@ function displayItems() {
     itemElement.innerHTML = `
       <img src="${item.image}" alt="${item.name}">
       <h3>${item.name}</h3>
-      <p>${item.price} ₽</p>
-      ${isAdmin ? `<button class="delete-btn" onclick="event.stopPropagation(); deleteItem(${index})">Удалить</button>` : ''}
+      <p>${item.price}</p>
     `;
     itemElement.onclick = () => {
-      window.location.href = `https://t.me/${TELEGRAM_USERNAME}`;
+      const message = encodeURIComponent(item.message);
+      window.location.href = `https://t.me/${TELEGRAM_USERNAME}?start=${message}`;
     };
     container.appendChild(itemElement);
   });
