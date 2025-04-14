@@ -63,8 +63,9 @@ function displayItems() {
       <p>${item.price}</p>
     `;
     itemElement.onclick = () => {
-      const message = encodeURIComponent(item.message);
-      window.location.href = `https://t.me/${TELEGRAM_USERNAME}?start=${message}`;
+      const baseMessage = "Здравствуйте, я покупатель, хочу купить у вас товар: ";
+      const fullMessage = encodeURIComponent(baseMessage + item.name);
+      window.location.href = `https://t.me/${TELEGRAM_USERNAME}?start=${fullMessage}`;
     };
     container.appendChild(itemElement);
   });
