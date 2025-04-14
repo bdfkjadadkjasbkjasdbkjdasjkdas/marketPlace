@@ -45,19 +45,35 @@ body {
 
 .items-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 10px;
 }
 
 .item {
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid rgba(255, 255, 255, 0.2);
-  padding: 15px;
-  border-radius: 12px;
+  padding: 25px;
+  border-radius: 15px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
+}
+
+.item img {
+  width: 80%;
+  max-width: 200px;
+  height: auto;
+}
+
+.item h3 {
+  font-size: 1.4em;
+  margin: 15px 0;
+}
+
+.item p {
+  font-size: 1.3em;
 }
 
 .item:hover {
