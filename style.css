@@ -62,18 +62,19 @@ body {
 }
 
 .item img {
-  width: 80%;
-  max-width: 200px;
+  width: 90%;
+  max-width: 280px;
   height: auto;
 }
 
 .item h3 {
-  font-size: 1.4em;
-  margin: 15px 0;
+  font-size: 1.8em;
+  margin: 20px 0;
 }
 
 .item p {
-  font-size: 1.3em;
+  font-size: 1.6em;
+  margin-top: 15px;
 }
 
 .item:hover {
